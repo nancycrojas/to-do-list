@@ -2,32 +2,42 @@ import { useState} from "react";
 import { Flex, HStack, Input, Select, Button, VStack, Text } from "@chakra-ui/react";
 
 export const TaskList = () => {
-  const [newTask, setNewTask] = useState('');
-  const [taskList, setTaskList] = useState([]);
+  const [values, setValues] = useState({
+    newTask: '',
+    taskList: []
+  });
 
   const handleInput = (e) => {
-    setNewTask(e.target.value);
-  };
+    setValues({
+        ...values,
+        newTask: e.target.value
+    });
+  }
 
-  const handleSend = () => {
-    setTaskList([...taskList, newTask]);
-    setNewTask('');
+  const handleSend = (e) => {
+    e.preventDefault()
+    setValues({
+        newTask: '',
+        taskList: [...values.taskList, values.newTask]
+    });
   }
 
   return (
-    <Flex direction="column" alignItems="center" justifyContent="center">
+    <form >
+      <Flex direction="column" alignItems="center" justifyContent="center">
         <HStack mb={10} mt={10} spacing={{ base:0, lg: 10}} flexWrap={{ base: "wrap", md: "nowrap"}} justifyContent={{ base: "center", md: "flex-start"}}>
             <Input
             focusBorderColor='red.300'
             type="text"
             placeholder="Add a new task"
             _placeholder={{ color: "grey", fontSize: "1.2rem"}}
-            value={newTask}
+            value={values.newTask}
             onChange={handleInput}
             w="20rem"
             border="1px solid gray"
             borderRadius="lg"
             textAlign="center"
+            autoComplete="off"
             />
             <Select w="20rem" textAlign= "center" maxW="100%" fontSize="1.2rem" border="1px solid gray" borderRadius="lg" color="grey">
                 <option value="all">All</option>
@@ -46,10 +56,11 @@ export const TaskList = () => {
          Send
         </Button>
         <VStack>
-            {taskList.map((task, index) => (
+            {values.taskList.map((task, index) => (
             <Text key={index}>{task}</Text>
             ))}
         </VStack>
-    </Flex>
+      </Flex>
+    </form>
   );
 }

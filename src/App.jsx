@@ -1,9 +1,14 @@
+import { Flex } from "@chakra-ui/react";
+import { Header } from "./components/Header";
+import { TaskList } from "./components/TaskList";
+
 function App() {
 
   return (
-    <div className="App">
-      <h1>To Do List</h1>
-    </div>
+    <Flex direction="column" alignItems="center" justifyContent="center">
+      <Header />
+      <TaskList/>
+    </Flex>
   );
 }
 

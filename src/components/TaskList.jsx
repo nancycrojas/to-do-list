@@ -1,10 +1,12 @@
 import { useState} from "react";
-import { Flex, HStack, Input, Select, Button, VStack, Text } from "@chakra-ui/react";
+import { Flex, HStack, Input, Select, Button, VStack, Text, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
+import { validateValue } from "../utils/validation";
 
 export const TaskList = () => {
   const [values, setValues] = useState({
     newTask: '',
-    taskList: []
+    taskList: [],
+    showMessage: false,
   });
 
   const handleInput = (e) => {
@@ -15,10 +17,21 @@ export const TaskList = () => {
   }
 
   const handleSend = (e) => {
-    e.preventDefault()
-    setValues({
+    e.preventDefault();
+
+    const isValid = validateValue(values.newTask);
+    if(!isValid){
+      setValues({
+        ...values,
+        showMessage:true,
+        message: 'Please add a task!'
+      });
+      return;
+    }
+      setValues({
         newTask: '',
-        taskList: [...values.taskList, values.newTask]
+        taskList: [...values.taskList, values.newTask],
+        showMessage: false,
     });
   }
 
@@ -55,7 +68,17 @@ export const TaskList = () => {
         >
          Send
         </Button>
-        <VStack>
+        {values.showMessage && (
+          <Flex>
+            <Alert p={2} mt={4} borderRadius="lg" status="warning" variant='subtle' flexDirection="column" alignItems="center" justifyContent="center" w="300px" >
+            <AlertIcon boxSize='30px' mr={0}/>
+            <AlertTitle mt={2} mb={1} fontSize='lg' >
+            {values.message}
+            </AlertTitle>
+          </Alert>
+          </Flex>
+        )}
+        <VStack mt={4}>
             {values.taskList.map((task, index) => (
             <Text key={index}>{task}</Text>
             ))}

@@ -1,6 +1,7 @@
 import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, LightMode, Flex, IconButton, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import { setLocalStorage } from "../utils/localStorage";
 
 export const Task = ({ task, id, taskList, setTaskList }) => {
   const [isCompleted, setIsCompleted] = useState(false);
@@ -10,7 +11,9 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
   };
 
   const handleDelete = (id) => {
-    setTaskList(taskList.filter(task =>task.id !== id))
+    const newTask = taskList.filter(task =>task.id !== id);
+    setTaskList(newTask);
+    setLocalStorage("task", newTask)
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useState} from "react";
-import { Flex, HStack, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
+import { Flex, HStack, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle, useToast } from "@chakra-ui/react";
 import { validateValue } from "../utils/validation";
 import { setLocalStorage } from "../utils/localStorage";
 import { Task } from "./Task";
@@ -9,6 +9,16 @@ export const TaskList = () => {
   const [taskList, setTaskList] = useState([]);
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
+  const toast = useToast()
+
+  const positions = [
+    'top',
+    'top-right',
+    'top-left',
+    'bottom',
+    'bottom-right',
+    'bottom-left',
+  ]
 
   const handleInput = (e) => {
     setValues(e.target.value);
@@ -37,6 +47,14 @@ export const TaskList = () => {
       
       setLocalStorage("task", updatedTaskList);
       console.log(updatedTaskList);
+
+      toast({
+        title: "Task added successfully",
+        position: "top-left",
+        status: "success",
+        duration: 2500,
+        isClosable: false,
+      })
     };
 
   return (

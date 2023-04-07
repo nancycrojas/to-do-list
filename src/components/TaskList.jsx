@@ -1,39 +1,36 @@
 import { useState} from "react";
 import { Flex, HStack, Input, Select, Button, VStack, Text, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import { validateValue } from "../utils/validation";
+import { setLocalStorage } from "../utils/localStorage";
 
 export const TaskList = () => {
-  const [values, setValues] = useState({
-    newTask: '',
-    taskList: [],
-    showMessage: false,
-  });
+  const [values, setValues] = useState("");
+  const [taskList, setTaskList] = useState([]);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleInput = (e) => {
-    setValues({
-        ...values,
-        newTask: e.target.value
-    });
+    setValues(e.target.value);
   }
 
   const handleSend = (e) => {
     e.preventDefault();
 
-    const isValid = validateValue(values.newTask);
+    const isValid = validateValue(values);
     if(!isValid){
-      setValues({
-        ...values,
-        showMessage:true,
-        message: 'Please add a task!'
-      });
+      setShowMessage(true);
+      setMessage('Please add a task!');
       return;
     }
-      setValues({
-        newTask: '',
-        taskList: [...values.taskList, values.newTask],
-        showMessage: false,
-    });
-  }
+
+    const updatedTaskList=[...taskList, values];
+      setTaskList(updatedTaskList);
+      setValues("");
+      setShowMessage(false);
+      
+      setLocalStorage("task", updatedTaskList);
+      console.log(updatedTaskList);
+    };
 
   return (
     <form >
@@ -44,7 +41,7 @@ export const TaskList = () => {
             type="text"
             placeholder="Add a new task"
             _placeholder={{ color: "grey", fontSize: "1.2rem"}}
-            value={values.newTask}
+            value={values}
             onChange={handleInput}
             w="20rem"
             border="1px solid gray"
@@ -68,18 +65,18 @@ export const TaskList = () => {
         >
          Send
         </Button>
-        {values.showMessage && (
+        {showMessage && (
           <Flex>
             <Alert p={2} mt={4} borderRadius="lg" status="warning" variant='subtle' flexDirection="column" alignItems="center" justifyContent="center" w="300px" >
             <AlertIcon boxSize='30px' mr={0}/>
             <AlertTitle mt={2} mb={1} fontSize='lg' >
-            {values.message}
+            {message}
             </AlertTitle>
           </Alert>
           </Flex>
         )}
         <VStack mt={4}>
-            {values.taskList.map((task, index) => (
+            {taskList.map((task, index) => (
             <Text key={index}>{task}</Text>
             ))}
         </VStack>

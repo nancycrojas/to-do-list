@@ -1,7 +1,8 @@
 import { useState} from "react";
-import { Flex, HStack, Input, Select, Button, VStack, Text, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
+import { Flex, HStack, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import { validateValue } from "../utils/validation";
 import { setLocalStorage } from "../utils/localStorage";
+import { Task } from "./Task";
 
 export const TaskList = () => {
   const [values, setValues] = useState("");
@@ -23,7 +24,13 @@ export const TaskList = () => {
       return;
     }
 
-    const updatedTaskList=[...taskList, values];
+    const newTask = {
+      id: self.crypto.randomUUID(),
+      newTask: values,
+      isCompleted: false
+    }
+
+    const updatedTaskList=[...taskList, newTask];
       setTaskList(updatedTaskList);
       setValues("");
       setShowMessage(false);
@@ -75,12 +82,12 @@ export const TaskList = () => {
           </Alert>
           </Flex>
         )}
-        <VStack mt={4}>
-            {taskList.map((task, index) => (
-            <Text key={index}>{task}</Text>
+        <VStack p={2} mt={4} border="1px solid gray" borderRadius="lg" w="300px" wordBreak="break-all" color="grey" fontSize="1.2rem">
+            {taskList.map((task) => (
+            <Task key={task.id} task={task.newTask} id={task.id} taskList={taskList} setTaskList={setTaskList} />
             ))}
         </VStack>
       </Flex>
     </form>
   );
-}
+};

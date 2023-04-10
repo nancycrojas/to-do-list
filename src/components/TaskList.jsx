@@ -1,5 +1,5 @@
 import { useState} from "react";
-import { Flex, HStack, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle, useToast } from "@chakra-ui/react";
+import { Flex, HStack, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle, useToast, Text } from "@chakra-ui/react";
 import { validateValue } from "../utils/validation";
 import { setLocalStorage } from "../utils/localStorage";
 import { Task } from "./Task";
@@ -7,7 +7,8 @@ import { Task } from "./Task";
 export const TaskList = ({ taskList, setTaskList, values, setValues }) => {
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
-  const toast = useToast()
+  const toast = useToast();
+  const [filter, setFilter] = useState("all");
 
   const positions = [
     'top',
@@ -55,6 +56,16 @@ export const TaskList = ({ taskList, setTaskList, values, setValues }) => {
       })
     };
 
+    const completedTasks = taskList.filter(task => task.isCompleted);
+    const incompletedTasks = taskList.filter(task => !task.isCompleted);
+    const allTasks = taskList;
+
+    const tasksShow = filter === "completed"
+    ? completedTasks
+    : filter === "incompleted"
+    ? incompletedTasks
+    : allTasks;
+
   return (
     <form >
       <Flex direction="column" alignItems="center" justifyContent="center">
@@ -66,13 +77,13 @@ export const TaskList = ({ taskList, setTaskList, values, setValues }) => {
             _placeholder={{ color: "grey", fontSize: "1.2rem"}}
             value={values}
             onChange={handleInput}
-            w="20rem"
+            w={{base:"16rem" , md:"20rem"}}
             border="1px solid gray"
             borderRadius="lg"
             textAlign="center"
             autoComplete="off"
             />
-            <Select w="20rem" textAlign= "center" maxW="100%" fontSize="1.2rem" border="1px solid gray" borderRadius="lg" color="grey">
+            <Select value={filter} onChange={(e)=>setFilter(e.target.value)} w={{base:"16rem" , md:"20rem"}} textAlign= "center" maxW="100%" fontSize="1.2rem" border="1px solid gray" borderRadius="lg" color="grey">
                 <option value="all">All</option>
                 <option value="completed">Completed</option>
                 <option value="incompleted">Incomplete</option>
@@ -98,10 +109,10 @@ export const TaskList = ({ taskList, setTaskList, values, setValues }) => {
           </Alert>
           </Flex>
         )}
-        <VStack p={2} mt={4} border="1px solid gray" borderRadius="lg" w="300px" wordBreak="break-all" color="grey" fontSize="1.2rem">
-            {taskList.map((task) => (
+        <VStack p={2} mt={4} border="1px solid gray" borderRadius="lg" w={{ base:"260px" , md:"300px"}} wordBreak="break-all" color="grey" fontSize="1.2rem">
+            {tasksShow.length > 0 ? tasksShow.map((task) => (
             <Task key={task.id} task={task.newTask} id={task.id} taskList={taskList} setTaskList={setTaskList} />
-            ))}
+            )) : <Text fontWeight="bold" >No tasks found</Text>}
         </VStack>
       </Flex>
     </form>

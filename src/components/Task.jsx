@@ -1,16 +1,28 @@
 import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, LightMode, Flex, IconButton, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Button, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
-import { setLocalStorage } from "../utils/localStorage";
+import { setLocalStorage, getLocalStorage } from "../utils/localStorage";
 import React from "react";
 
 export const Task = ({ task, id, taskList, setTaskList }) => {
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [tasks, setTasks] = useState(()=>{
+    const storedTasks = getLocalStorage("task") || [];
+    return storedTasks;
+  })
+  // const [isCompleted, setIsCompleted] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
 
-  const handleCheck = () => {
-    setIsCompleted(!isCompleted);
+  const handleCheck = (id) => {
+    // setIsCompleted(!isCompleted);
+    const newTask = taskList.map((task)=>{
+      if(task.id === id){
+        task.isCompleted = !task.isCompleted
+      }
+      return task;
+    })
+    setTaskList(newTask);
+    setLocalStorage("task", newTask);
   };
 
   const handleDelete = (id) => {
@@ -20,9 +32,9 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
   };
 
   return (
-    <Flex alignItems="center" justifyContent="space-between" w="100%" p={2} borderRadius="lg" bg={isCompleted ? "gray.200" : "white"}>
+    <Flex alignItems="center" justifyContent="space-between" w="100%" p={2} borderRadius="lg" bg={task.isCompleted ? "gray.200" : "white"}>
       <Box flex={1} mr={2}>
-        <Text mr={2} textDecoration = {isCompleted ? "line-through" : "none"} color= {isCompleted ? "gray.500" : "black"}>{task}</Text>
+        <Text mr={2} textDecoration = {task.isCompleted ? "line-through" : "none"} color= {task.isCompleted ? "gray.500" : "black"}>{task}</Text>
       </Box>
       <Flex>
         <LightMode>
@@ -30,10 +42,10 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
         aria-label="complete"
         mr={2}
         colorScheme="green"
-        variant={isCompleted ? "outline" : "solid"}
+        variant={task.isCompleted ? "outline" : "solid"}
         size="xs"
         icon={<CheckIcon/>}
-        onClick={handleCheck}
+        onClick={() => handleCheck(id)}
         />
         </LightMode>
         <LightMode>
@@ -55,7 +67,7 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete task
+              <Text>Delete task: {task}</Text>
             </AlertDialogHeader>
 
             <AlertDialogBody>

@@ -4,9 +4,7 @@ import { validateValue } from "../utils/validation";
 import { setLocalStorage } from "../utils/localStorage";
 import { Task } from "./Task";
 
-export const TaskList = () => {
-  const [values, setValues] = useState("");
-  const [taskList, setTaskList] = useState([]);
+export const TaskList = ({ taskList, setTaskList, values, setValues }) => {
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
   const toast = useToast()

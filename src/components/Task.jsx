@@ -9,15 +9,15 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
     const storedTasks = getLocalStorage("task") || [];
     return storedTasks;
   })
-  // const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(task.isCompleted);
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
 
   const handleCheck = (id) => {
-    // setIsCompleted(!isCompleted);
     const newTask = taskList.map((task)=>{
       if(task.id === id){
         task.isCompleted = !task.isCompleted
+        setIsCompleted(task.isCompleted);
       }
       return task;
     })
@@ -32,9 +32,9 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
   };
 
   return (
-    <Flex alignItems="center" justifyContent="space-between" w="100%" p={2} borderRadius="lg" bg={task.isCompleted ? "gray.200" : "white"}>
+    <Flex alignItems="center" justifyContent="space-between" w="100%" p={2} borderRadius="lg" bg={isCompleted ? "gray.200" : "white"}>
       <Box flex={1} mr={2}>
-        <Text mr={2} textDecoration = {task.isCompleted ? "line-through" : "none"} color= {task.isCompleted ? "gray.500" : "black"}>{task}</Text>
+        <Text mr={2} textDecoration = {isCompleted ? "line-through" : "none"} color= {isCompleted ? "gray.500" : "black"}>{task}</Text>
       </Box>
       <Flex>
         <LightMode>
@@ -42,7 +42,7 @@ export const Task = ({ task, id, taskList, setTaskList }) => {
         aria-label="complete"
         mr={2}
         colorScheme="green"
-        variant={task.isCompleted ? "outline" : "solid"}
+        variant={isCompleted ? "outline" : "solid"}
         size="xs"
         icon={<CheckIcon/>}
         onClick={() => handleCheck(id)}

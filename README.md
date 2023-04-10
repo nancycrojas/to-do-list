@@ -31,11 +31,11 @@ To Do List es una aplicación desarrollada con React que te permite crear una li
 - Añadir tarea - Eliminar tarea
 ---
 
-![](./to-do-list/src/assets/to-do-list.jpg)
+![](https://raw.githubusercontent.com/nancycrojas/to-do-list/master/src/assets/to-do-list.jpg)
 ---
 ---
 
 - Filtrar tareas - Modo oscuro - Modo claro
 ---
-![](./to-do-list/src/assets/to-do-list-2.jpg)
+![](https://raw.githubusercontent.com/nancycrojas/to-do-list/master/src/assets/to-do-list-2.jpg)
 # to-do-list
